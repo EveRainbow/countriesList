@@ -1,5 +1,19 @@
 <template>
-  <v-table fixed-header>
+  <div
+    v-if="isLoading"
+    class="text-center"
+  >
+    <v-progress-circular
+      indeterminate
+      color="primary"
+    />
+  </div>
+  <v-table
+    v-else
+    fixed-header
+    height="100%"
+    class="h-100"
+  >
     <thead>
       <tr>
         <th class="text-left">
@@ -27,11 +41,17 @@
       </tr>
     </tbody>
   </v-table>
+  <p
+    v-if="!isLoading && !countries.getCountriesList?.length"
+    class="text-center"
+  >
+    No data
+  </p>
 </template>
 
 <script setup>
 import { useCountriesStore } from "@/stores/countries"
-import { onMounted } from "vue"
+import { onBeforeMount, ref } from "vue"
 
 const props = defineProps({
   selectedCountry: {
@@ -43,9 +63,9 @@ const props = defineProps({
 const emit = defineEmits(['updateSelected'])
 
 const countries = useCountriesStore()
-onMounted(() => {
+onBeforeMount(() => {
   if (!countries.getCountriesList.length) {
-    countries.fetchCountriesList()
+    fetchCountries()
   }
 })
 
@@ -55,6 +75,13 @@ function updateSelected (country) {
     newCountrySelected = country
   }
   emit('updateSelected', newCountrySelected)
+}
+
+let isLoading = ref(false)
+async function fetchCountries () {
+  isLoading.value = true
+  await countries.fetchCountriesList()
+  isLoading.value = false
 }
 
 </script>

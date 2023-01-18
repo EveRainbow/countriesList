@@ -5,13 +5,13 @@
     </p>
   </div>
   <div class="screenHeightWrapper d-flex justify-space-between">
-    <div class="h-100 w-50 p-5 overflow-auto">
+    <div class="w-50">
       <CountriesTable
         :selected-country="selectedCountry"
         @update-selected="updateSelectedCountry"
       />
     </div>
-    <div class="h-100 w-50 p-5">
+    <div class="w-50">
       <MapComponent :marker="marker" />
     </div>
   </div>

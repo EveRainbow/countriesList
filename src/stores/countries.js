@@ -4,6 +4,18 @@ import api from '@/api'
 
 export const useCountriesStore = defineStore('countries', () => {
   const countriesList = ref([])
+
+  function fetchCountriesList () {
+    return api.countries.getCountriesList().then(data => {
+      setCountriesList(data)
+    })
+  }
+
+  function setCountriesList (data) {
+    countriesList.value = data
+    sessionStorage.setItem("countriesList", JSON.stringify(data))
+  }
+
   const getCountriesList = computed(() => {
     let countriesListFromSessionStorage = sessionStorage.getItem("countriesList")
     if (countriesListFromSessionStorage) {
@@ -14,13 +26,6 @@ export const useCountriesStore = defineStore('countries', () => {
       : countriesList.value
     return result
   })
-
-  function fetchCountriesList () {
-    return api.countries.getCountriesList().then(data => {
-      countriesList.value = data
-      sessionStorage.setItem("countriesList", JSON.stringify(data))
-    })
-  }
 
   return { fetchCountriesList, getCountriesList }
 })
